@@ -7,6 +7,7 @@ import Signin from "../pages/Signin";
 import Answered from "../pages/Answered";
 import Unanswered from "../pages/Unanswered";
 import LeaderBoard from "../pages/LeaderBoard";
+import DetailQuestion from "../pages/DetailQuestion";
 
 const RouterProvider = () => {
 	const navigate = useNavigate();
@@ -26,6 +27,7 @@ const RouterProvider = () => {
 				<Route path="/" element={<LeaderBoard />} />
 				<Route path="/answered" element={<Answered />} />
 				<Route path="/unanswered" element={<Unanswered />} />
+				<Route path="/question/:id" element={<DetailQuestion />} />
 			</Route>
 			<Route path="/signin" element={<Signin />} />
 		</Routes>

@@ -6,15 +6,13 @@ import {
 	CardMedia,
 	Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const AnswaredQuestionItem = (props) => {
-	const { author, timestamp, optionOne, optionTwo } = props;
-
-	const [openPoll, setOpenPoll] = useState(false);
-
+	const { author, timestamp, optionOne, optionTwo, isDetail, id } = props;
 	const users = useSelector((state) => state.users);
+	const navigate = useNavigate();
 
 	const numberVoteOne = optionOne.votes.length;
 	const numberVoteTwo = optionTwo.votes.length;
@@ -25,6 +23,34 @@ const AnswaredQuestionItem = (props) => {
 	let choosedText =
 		numberVoteOne > numberVoteTwo ? optionOne.text : optionTwo.text;
 
+	const detailPoll = () => {
+		return (
+			<div>
+				<Typography component="div" variant="h5">
+					Result:
+				</Typography>
+				<Typography component="div" variant="h6">
+					{optionOne.text}:
+				</Typography>
+				<Typography variant="subtitle2" color="text.secondary" component="li">
+					Votes: {numberVoteOne}
+				</Typography>
+				<Typography variant="subtitle2" color="text.secondary" component="li">
+					Percentage: {percentageOne}%
+				</Typography>
+				<Typography component="div" variant="h6">
+					{optionTwo.text}:
+				</Typography>
+				<Typography variant="subtitle2" color="text.secondary" component="li">
+					Votes: {numberVoteTwo}
+				</Typography>
+				<Typography variant="subtitle2" color="text.secondary" component="li">
+					Percentage: {percentageTwo}%
+				</Typography>
+			</div>
+		);
+	};
+
 	return (
 		<Card>
 			<Box sx={{ display: "flex", flexDirection: "column", p: 1 }}>
@@ -32,7 +58,7 @@ const AnswaredQuestionItem = (props) => {
 					{users.allUsers[author].name} asked:
 				</Typography>
 				<Box sx={{ display: "flex" }}>
-					<Box sx={{ display: "flex", flex: 1 }}>
+					<Box sx={{ display: "flex", flex: 3 }}>
 						<CardMedia
 							component="img"
 							sx={{
@@ -80,67 +106,21 @@ const AnswaredQuestionItem = (props) => {
 								>
 									<b>{choosedText}</b>
 								</Typography>
-								<Button
-									onClick={() => {
-										setOpenPoll(!openPoll);
-									}}
-									color="error"
-									variant={openPoll ? "outlined" : "contained"}
-									sx={{ mt: 1.5 }}
-								>
-									{openPoll ? "Hide poll" : "View poll"}
-								</Button>
+								{!isDetail && (
+									<Button
+										onClick={() => {
+											navigate(`/question/${id}`);
+										}}
+										color="error"
+										variant="contained"
+										sx={{ mt: 1.5 }}
+									>
+										View poll
+									</Button>
+								)}
 							</CardContent>
 						</Box>
-					</Box>
-					<Box sx={{ display: "flex", flex: 1, margin: 2 }}>
-						{openPoll && (
-							<CardContent sx={{ flex: "1 0 auto", maxWidth: 500 }}>
-								<Typography component="div" variant="b">
-									<b>{optionOne.text}</b> or <b>{optionTwo.text}</b>?
-								</Typography>
-								<Typography component="div" variant="b">
-									Choosed: <b>{choosedText}</b>
-								</Typography>
-								<Typography component="div" variant="h5">
-									Result:
-								</Typography>
-								<Typography component="div" variant="h6">
-									{optionOne.text}:
-								</Typography>
-								<Typography
-									variant="subtitle2"
-									color="text.secondary"
-									component="li"
-								>
-									Votes: {numberVoteOne}
-								</Typography>
-								<Typography
-									variant="subtitle2"
-									color="text.secondary"
-									component="li"
-								>
-									Percentage: {percentageOne}%
-								</Typography>
-								<Typography component="div" variant="h6">
-									{optionTwo.text}:
-								</Typography>
-								<Typography
-									variant="subtitle2"
-									color="text.secondary"
-									component="li"
-								>
-									Votes: {numberVoteTwo}
-								</Typography>
-								<Typography
-									variant="subtitle2"
-									color="text.secondary"
-									component="li"
-								>
-									Percentage: {percentageTwo}%
-								</Typography>
-							</CardContent>
-						)}
+						{isDetail && <Box sx={{ ml: 20, mt: 2 }}>{detailPoll()}</Box>}
 					</Box>
 				</Box>
 			</Box>
